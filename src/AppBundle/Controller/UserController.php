@@ -143,7 +143,7 @@ class UserController extends Controller
 
             $em = $this->getDoctrine()->getManager();
             $user = $em->getRepository("AppBundle:User")->findOneBy(array(
-                "id" => $identity->sub
+                "id" => $identity->id
             ));
 
             $json = $request->get("json", null);
@@ -184,7 +184,7 @@ class UserController extends Controller
                     }
 
                     $em = $this->getDoctrine()->getManager();
-                    $isset_user = $em->getRepository("BackendBundle:User")->findBy(
+                    $isset_user = $em->getRepository("AppBundle:User")->findBy(
                         array(
                             "email" => $email
                         ));
