@@ -181,20 +181,25 @@ class CompanyController extends Controller
 //           "id" => $company->getUser()->getId()
 //        ), array('id'=>'desc'));
 
+        ;
+        ;
+       ;
+        $Company->getPhone();
+        $Company->getAddress();
+        $Company->getPhotoavatar();
+        $Company->getPhotoheader();
 
-
-        $Company=array(
+        $company=array(
             "id"=>$Company->getId(),
             "name"=>$Company->getName(),
             "title"=>$Company->getTitledescription(),
-            "description"=> $Company->getDescription(),
-            "phone"=> $Company->getPhone(),
-            "address"=>$Company->getAddress(),
-            "photoheader"=>$Company->getPhotoavatar(),
-            "photoavatar"=> $Company->getPhotoheader(),
-            "id_user"=>$Company->getUser()->getId()
+            "description"=>$description,
+            "phone"=>$phone,
+            "address"=>$address,
+            "photoheader"=>$photoheader,
+            "photoavatar"=>$photoavatar,
+            "id_user"=>$user_id
         );
-
         if(count($Company) >= 1){
             $data = array(
                 "status" => "success",
@@ -367,5 +372,19 @@ class CompanyController extends Controller
         return $helpers->json($data);
     }
 
-
+    /**
+     * Creates a form to delete a company entity.
+     *
+     * @param Company $company The company entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm(Company $company)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('company_delete', array('id' => $company->getId())))
+            ->setMethod('DELETE')
+            ->getForm()
+        ;
+    }
 }
