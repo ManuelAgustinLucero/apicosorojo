@@ -227,7 +227,40 @@ class User
 
     public function __construct()
     {
-        $this->Company= new ArrayCollection();
+        //$this->Company= new ArrayCollection();
+    }
+
+    /**
+     * Add company
+     *
+     * @param \AppBundle\Entity\Company $company
+     *
+     * @return User
+     */
+    public function addCompany(\AppBundle\Entity\Company $company)
+    {
+        $this->Company[] = $company;
+
+        return $this;
+    }
+
+    /**
+     * Remove company
+     *
+     * @param \AppBundle\Entity\Company $company
+     */
+    public function removeCompany(\AppBundle\Entity\Company $company)
+    {
+        $this->Company->removeElement($company);
+    }
+
+    /**
+     * Get company
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCompany()
+    {
+        return $this->Company;
     }
 }
-

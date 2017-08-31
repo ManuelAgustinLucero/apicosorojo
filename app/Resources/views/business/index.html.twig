@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Businesses list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Photo</th>
+                <th>Createdat</th>
+                <th>Updateat</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for business in businesses %}
+            <tr>
+                <td><a href="{{ path('business_show', { 'id': business.id }) }}">{{ business.id }}</a></td>
+                <td>{{ business.name }}</td>
+                <td>{{ business.photo }}</td>
+                <td>{% if business.createdAt %}{{ business.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if business.updateAt %}{{ business.updateAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('business_show', { 'id': business.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('business_edit', { 'id': business.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('business_new') }}">Create a new business</a>
+        </li>
+    </ul>
+{% endblock %}

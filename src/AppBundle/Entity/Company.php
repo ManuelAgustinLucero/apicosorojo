@@ -278,4 +278,36 @@ class Company
     {
         return $this->user;
     }
+
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Business", inversedBy="companies")
+     * @ORM\JoinColumn(name="business_id", referencedColumnName="id")
+     */
+    private $business;
+
+
+    /**
+     * Set business
+     *
+     * @param \AppBundle\Entity\Business $business
+     *
+     * @return Company
+     */
+    public function setBusiness(\AppBundle\Entity\Business $business = null)
+    {
+        $this->business = $business;
+
+        return $this;
+    }
+
+    /**
+     * Get business
+     *
+     * @return \AppBundle\Entity\Business
+     */
+    public function getBusiness()
+    {
+        return $this->business;
+    }
 }
