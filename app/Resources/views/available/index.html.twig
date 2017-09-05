@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Availables list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Day</th>
+                <th>Startam</th>
+                <th>Endam</th>
+                <th>Startpm</th>
+                <th>Endpm</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for available in availables %}
+            <tr>
+                <td><a href="{{ path('available_show', { 'id': available.id }) }}">{{ available.id }}</a></td>
+                <td>{{ available.day }}</td>
+                <td>{% if available.startAm %}{{ available.startAm|date('H:i:s') }}{% endif %}</td>
+                <td>{% if available.endAm %}{{ available.endAm|date('H:i:s') }}{% endif %}</td>
+                <td>{% if available.startPm %}{{ available.startPm|date('H:i:s') }}{% endif %}</td>
+                <td>{% if available.endPm %}{{ available.endPm|date('H:i:s') }}{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('available_show', { 'id': available.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('available_edit', { 'id': available.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('available_new') }}">Create a new available</a>
+        </li>
+    </ul>
+{% endblock %}

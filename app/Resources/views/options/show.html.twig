@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Option</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ option.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ option.name }}</td>
+            </tr>
+            <tr>
+                <th>Photo</th>
+                <td>{{ option.photo }}</td>
+            </tr>
+            <tr>
+                <th>Duration</th>
+                <td>{% if option.duration %}{{ option.duration|date('H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ option.status }}</td>
+            </tr>
+            <tr>
+                <th>Createat</th>
+                <td>{% if option.createAt %}{{ option.createAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Updateat</th>
+                <td>{% if option.updateAt %}{{ option.updateAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('options_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('options_edit', { 'id': option.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

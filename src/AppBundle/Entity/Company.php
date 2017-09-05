@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Company
@@ -309,5 +310,50 @@ class Company
     public function getBusiness()
     {
         return $this->business;
+    }
+
+
+    /**
+     * @ORM\OneToMany(targetEntity="Options", mappedBy="company")
+     */
+    private $options;
+
+    public function __construct()
+    {
+        $this->options = new ArrayCollection();
+    }
+
+    /**
+     * Add option
+     *
+     * @param \AppBundle\Entity\Options $option
+     *
+     * @return Company
+     */
+    public function addOption(\AppBundle\Entity\Options $option)
+    {
+        $this->options[] = $option;
+
+        return $this;
+    }
+
+    /**
+     * Remove option
+     *
+     * @param \AppBundle\Entity\Options $option
+     */
+    public function removeOption(\AppBundle\Entity\Options $option)
+    {
+        $this->options->removeElement($option);
+    }
+
+    /**
+     * Get options
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getOptions()
+    {
+        return $this->options;
     }
 }

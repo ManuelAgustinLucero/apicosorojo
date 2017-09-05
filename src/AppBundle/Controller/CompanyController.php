@@ -32,13 +32,34 @@ class CompanyController extends Controller
      */
     public function indexAction()
     {
+        $helpers = $this->get("app.helpers");
+
         $em = $this->getDoctrine()->getManager();
 
-        $companies = $em->getRepository('AppBundle:Company')->findAll();
+        $repository = $em->getRepository("AppBundle:Company");
 
-        return $this->render('company/index.html.twig', array(
-            'companies' => $companies,
-        ));
+        $query = $repository->createQueryBuilder('p')
+            ->select(array(
+                    'p.id as codigo',
+                    'p.name',
+                    'p.titledescription',
+                    'p.photoheader',
+                    'p.photoavatar',
+                    'p.description',
+                    'p.address',
+                )
+            );
+        $company=$query->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+//                    return new JsonResponse($query->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY));
+
+
+        $data = array(
+            "status" => "success",
+            "code" => 200,
+            "data" => $company
+        );
+        return $helpers->json($data);
+
     }
 
     /**
@@ -68,6 +89,7 @@ class CompanyController extends Controller
 
                 $user_id = ($identity->id != null) ? $identity->id : null;
                 $name = (isset($params->name)) ? $params->name : null;
+                $business_id = (isset($params->business)) ? $params->business : null;
                 $description = (isset($params->description)) ? $params->description : null;
                 $address = (isset($params->address)) ? $params->address : null;
                 $phone = (isset($params->phone)) ? $params->phone : null;
@@ -83,6 +105,10 @@ class CompanyController extends Controller
                         array(
                             "id" => $user_id
                         ));
+                    $business= $em->getRepository("AppBundle:Business")->findOneBy(
+                        array(
+                            "id" => $business_id
+                        ));
 
                     $Company = new Company();
                     $Company->setName($name);
@@ -93,6 +119,8 @@ class CompanyController extends Controller
                     $Company->setPhotoavatar($photoavatar);
                     $Company->setPhotoheader($photoheader);
                     $Company->setUser($user);
+                    $Company->setBusiness($business);
+
 
                     $em->persist($Company);
                     $em->flush();
@@ -106,10 +134,11 @@ class CompanyController extends Controller
                         "address"=>$address,
                         "photoheader"=>$photoheader,
                         "photoavatar"=>$photoavatar,
-                        "id_user"=>$user_id
+                        "id_user"=>$user_id,
+                        "businnes"=>$business_id
                     );
 
-                   // $Company = $em->getRepository("AppBundle:Company")->findOneById($Company->getId());
+                    //$Company = $em->getRepository("AppBundle:Company")->findOneById($Company->getId());
 
 //
 //                    $Company = $em->getRepository("AppBundle:Company")->findOneBy(
@@ -122,6 +151,7 @@ class CompanyController extends Controller
 
                     $jsonObject = $serializer->serialize($Company, 'json');
 //
+
 //                    $normalizer = new ObjectNormalizer();
 //                    $normalizer->setCircularReferenceLimit(1);
 //                    $normalizer->setCircularReferenceHandler(function ($Company) {
@@ -130,6 +160,26 @@ class CompanyController extends Controller
 //                    $normalizers = array($normalizer);
 //                    $s = new Serializer($normalizers, $Company);
 
+
+                    $repository = $em->getRepository("AppBundle:Company");
+
+                    $query = $repository->createQueryBuilder('p')
+                        ->select(array(
+                                'p.id as codigo',
+                                'p.name',
+                                'p.titledescription',
+                                'p.photoheader',
+                                'p.photoavatar',
+                                'p.description',
+                                'p.address',
+                            )
+                        )
+                    ->where('p.id = :idcompany')
+                    ->setParameter(':idcompany',$Company->getId())
+                    ->setMaxResults(1)
+                    ;
+                    $company=$query->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+//                    return new JsonResponse($query->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY));
 
 
                     $data = array(
@@ -168,43 +218,38 @@ class CompanyController extends Controller
      * @Route("/{id}", name="company_show")
      * @Method("GET")
      */
+
     public function showAction(Request $request, $id = null)
     {
         $helpers = $this->get("app.helpers");
         $em = $this->getDoctrine()->getManager();
 
-        $Company = $em->getRepository("AppBundle:Company")->findOneBy(array(
-            "id" => $id
-        ));
+//        $Company = $em->getRepository("AppBundle:Company")->findOneBy(array(
+//            "id" => $id
+//        ));
 
 //        $comments = $em->getRepository("AppBundle:User")->findBy(array(
 //           "id" => $company->getUser()->getId()
 //        ), array('id'=>'desc'));
 
-        ;
-        ;
-       ;
-        $Company->getPhone();
-        $Company->getAddress();
-        $Company->getPhotoavatar();
-        $Company->getPhotoheader();
+        $repository = $em->getRepository("AppBundle:Company");
 
-        $company=array(
-            "id"=>$Company->getId(),
-            "name"=>$Company->getName(),
-            "title"=>$Company->getTitledescription(),
-            "description"=>$description,
-            "phone"=>$phone,
-            "address"=>$address,
-            "photoheader"=>$photoheader,
-            "photoavatar"=>$photoavatar,
-            "id_user"=>$user_id
-        );
-        if(count($Company) >= 1){
+        $query = $repository->createQueryBuilder('p')
+            ->select(array(
+                    'p'
+                )
+            )
+            ->where('p.id = :idcompany')
+            ->setParameter(':idcompany',$id)
+            ->setMaxResults(1)
+        ;
+        $company=$query->getQuery()->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+
+        if(count($company) >= 1){
             $data = array(
                 "status" => "success",
                 "code"	 => 200,
-                "data"	 => $Company
+                "data"	 => $company
             );
         }else{
             $data = array(
@@ -250,6 +295,8 @@ class CompanyController extends Controller
                 $address = (isset($params->address)) ? $params->address : null;
                 $phone = (isset($params->phone)) ? $params->phone : null;
                 $titledescription = (isset($params->titledescription)) ? $params->titledescription : null;
+                $business_id = (isset($params->business)) ? $params->business : null;
+
                 $photoavatar = null;
                 $photoheader = null;
 
@@ -260,7 +307,10 @@ class CompanyController extends Controller
                         array(
                             "id" => $Company_id
                         ));
-
+                    $business= $em->getRepository("AppBundle:Business")->findOneBy(
+                        array(
+                            "id" => $business_id
+                        ));
                     if (isset($identity->id) && $identity->id == $Company->getUser()->getId()) {
 
                         $Company->setName($name);
@@ -270,6 +320,8 @@ class CompanyController extends Controller
                         $Company->setAddress($address);
                         $Company->setPhotoavatar($photoavatar);
                         $Company->setPhotoheader($photoheader);
+                        $Company->setBusiness($business);
+
 
                         $em->persist($Company);
                         $em->flush();
